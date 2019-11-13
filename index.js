@@ -39,8 +39,24 @@ Airplane.prototype.land = function () {
         + It should return a string with `name` and `age`. Example: "Mary, 50"
 */
 
-function Person() {
+function Person(name, age) {
+  this.name = name,
+  this.age = age,
+  this.stomach = []
+}
 
+Person.prototype.eat = function(someFood) {
+  if(this.stomach.length < 10) {
+    this.stomach.push(someFood);
+  } 
+}
+
+Person.prototype.poop = function() {
+  this.stomach = [];
+}
+
+Person.prototype.toString = function() {
+  return `${this.name}, ${this.age}`;
 }
 
 /*
@@ -57,10 +73,30 @@ function Person() {
         + The `drive` method should return a string "I ran out of fuel at x miles!" x being `odometer`.
 */
 
-function Car() {
-
+function Car(model, milesPerGallon) {
+  this.model = model,
+  this.milesPerGallon = milesPerGallon,
+  this.tank = 0,
+  this.odometer = 0
 }
 
+Car.prototype.fill = function(gallons) {
+  this.tank += gallons;
+}
+
+Car.prototype.drive = function(distance) {
+  let maxDistance = this.tank * this.milesPerGallon;
+
+  if(distance < maxDistance){
+    this.odometer += distance;
+    this.tank -= distance / this.milesPerGallon;
+  }
+  else if(distance > maxDistance){
+    this.odometer += maxDistance;
+    this.tank = 0;
+    return `I ran out of fuel at ${this.odometer} miles!`;
+  }
+}
 /*
   TASK 3
     - Write a Baby constructor subclassing Person.
@@ -68,18 +104,26 @@ function Car() {
     - Besides the methods on Person.prototype, babies have the ability to `.play()`:
         + Should return a string "Playing with x", x being the favorite toy.
 */
-function Baby() {
+function Baby(name, age, favoriteToy) {
+  Person.call(this, name, age);
 
+  this.favoriteToy = favoriteToy;
+}
+
+Baby.prototype = Object.create(Person.prototype);
+Baby.prototype.constructor = Baby;
+Baby.prototype.play = function () {
+  return `Playing with ${this.favoriteToy}`
 }
 
 /* 
   TASK 4
 
   In your own words explain the four principles for the "this" keyword below:
-  1. 
-  2. 
-  3. 
-  4. 
+  1. Implicit binding, where whatever object is before the dot is binded to this.
+  2. Explicit binding, which forces a function to use an object when this has been used in the function.
+  3. Default binding, which this is binded to the scope or context it is in.
+  4. New binding, where an empty object is created and this refer to the currently empty object.
 */
 
 
